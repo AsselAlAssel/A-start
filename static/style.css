@@ -4,6 +4,7 @@
     box-sizing: border-box;
 }
 
+
 body {
     font-family: 'VT323', monospace;
     background-color: #5e5e5e;
@@ -46,14 +47,26 @@ button {
     margin: 50px;
 }
 
+.game {
+    position: relative;
+    background: #fff;
+}
+
+.car {
+    background-image: url(../static/car90.png);
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    z-index: 9;
+}
+
 table {
-    /* width: 100%; */
-    /* height: 100%; */
-    margin: 0 auto;
-    /* padding: 25px;margin: 25px; */
+    /* margin: 0 auto; */
     border: 1px solid #5e5e5e;
     border-spacing: 0;
+    /* width: 100%; */
 }
+
 
 
 td {

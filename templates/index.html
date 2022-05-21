@@ -6,12 +6,40 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
 </head>
 
 <body>
-    <h2>hello</h2>
-    <h1>hi hus</h1>
-    <button onclick="solve()">click here</button>
+    <header class="header">
+        <div class="container">
+            <div class="header__content">
+                <!-- <h2>hello</h2> -->
+                <h1>A* Road tracking game</h1>
+                <nav class="nav">
+
+                </nav>
+            </div>
+
+        </div>
+
+    </header>
+    <div class="container">
+        <div class="game__content">
+            <div class="game__controls">
+                <button onclick="Generate()">Generate</button>
+                <button onclick="solve()">click here</button>
+            </div>
+            <table id="game-container">
+
+            </table>
+
+        </div>
+
+
+    </div>
+
+
 
     <script src="{{url_for('static', filename='index.js')}}"></script>
 

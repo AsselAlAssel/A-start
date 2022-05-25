@@ -100,6 +100,7 @@ def heuristic(a, b):
 
 def astar(array, start, goal):
     array = np.array(array)
+
     # neighbors = [(0,1),(0,-1),(1,0),(-1,0),(1,1),(1,-1),(-1,1),(-1,-1)]
     neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
@@ -177,9 +178,9 @@ def astar(array, start, goal):
     return False
 
 
-start = (1, 1)
+# start = (1, 1)
 
-goal = (1, 15)
+# goal = (1, 15)
 # route = astar(grid, start, goal)
 
 # route = route + [start]
@@ -187,7 +188,7 @@ goal = (1, 15)
 # route = route[::-1]
 # print(list(route))
 
-def startGame(game):
+def startGame(game,start,goal):
 
     route = astar(game, start, goal)
 

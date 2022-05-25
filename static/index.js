@@ -23,18 +23,23 @@ const game = [
 
 // const tempGame = game;
 const solve = () => {
+    try {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function () {
+            const z = this.responseText;
+            console.log(z)
+            // console.log(JSON.parse(z));
+            const solution = JSON.parse(z);
+            printPath(solution);
+        }
+        xhttp.open("POST", "/solve");
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send(`game=${JSON.stringify(game)}&&start=${JSON.stringify(start)}&&goal=${JSON.stringify(finish)}`);
+    } catch (error) {
+        console.log(error.message())
 
-    const xhttp = new XMLHttpRequest();
-    xhttp.onload = function () {
-        const z = this.responseText;
-        console.log(z)
-        // console.log(JSON.parse(z));
-        const solution = JSON.parse(z);
-        printPath(solution);
     }
-    xhttp.open("POST", "/solve");
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(`game=${JSON.stringify(game)}`);
+
 }
 
 

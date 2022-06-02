@@ -1,6 +1,8 @@
 const table = document.querySelector('#grid-container');
 const car = document.querySelector('#car');
 var start, finish = 0;
+var startElement, finishElement = null;
+var isClickedHerPushed = false;
 var solution;
 const game = [
     [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
@@ -24,6 +26,7 @@ const game = [
 
 // const tempGame = game;
 const solve = () => {
+    isClickedHerPushed = true;
     try {
         const xhttp = new XMLHttpRequest();
         xhttp.onload = function () {
@@ -50,7 +53,7 @@ const printPath = async solution => {
     console.log(solution);
     car.classList.remove('hidden');
     for (index in solution) {
- 
+
         console.log(index);
 
         const yIndex = solution[index][0] * 32;
@@ -59,9 +62,19 @@ const printPath = async solution => {
         car.style.top = yIndex + 'px';
 
         console.log(xIndex, yIndex);
-        await timer(1000);
+        await timer(500);
     }
-    start = 0;
+    console.log(start);
+    console.log(finish);
+    start = finish;
+    console.log(start);
+    startElement.classList.remove("start");
+    finishElement.classList.remove("finish");
+    startElement=finishElement
+    startElement.classList.add("start");
+    isClickedHerPushed=false;
+    finish=0;
+    finishElement=null;
 }
 
 const Generate = () => {
@@ -98,55 +111,48 @@ const Generate = () => {
                 cell.classList.add("available");
             }
             cell.addEventListener('click', Selection);
+            cell.dataset.type = row[element];
             cell.id = game.indexOf(row) + ' ' + element;
             table_row.appendChild(cell);
         }
         table.appendChild(table_row);
     })
 }
+const getLocation = currLocation => [+currLocation[0], +currLocation[1]];
 
 const Selection = (event) => {
-    let currLocation = event.target.id.split(' ');
-    // if(solution && finish){
-        
-    //     start = finish;
-    //     let cell = document.querySelector(".colored2");
-    //     cell.classList.add('available');
-    //     cell.classList.remove('colored1');
-    //     event.target.classList.add('colored1');
-    //     event.target.classList.remove('available');
-    // }
-    if (!start) {
-        let s = document.querySelector('.start');
-        s?.classList.remove('start');
-        s?.classList.add('available');
-        if(finish){
-            start = finish;
-            let s = document.querySelector('.finish');
-            s?.classList.remove('finish');
-            s?.classList.add('start');
-            finish = [parseInt(currLocation[0]), parseInt(currLocation[1])];
-            event.target.classList.remove('available');
-            event.target.classList.add('finish');
-        }else{
-            start = [parseInt(currLocation[0]), parseInt(currLocation[1])];
-            event.target.classList.remove('available');
-            event.target.classList.add('start');
+    const targeted = event.target.closest("td");
+    let currLocation = targeted.id.split(' ');
+    const type = targeted.dataset.type;
+    if (type == 0) {
+        if (!startElement) {
+            start =getLocation(currLocation);
+            startElement = targeted;
+            targeted.classList.add("start");
+            return;
+
         }
-        
-    } 
-    else {
-        finish = [parseInt(currLocation[0]), parseInt(currLocation[1])];
-        let cell = document.querySelector(".finish");
-        cell?.classList.add('available');
-        cell?.classList.remove('finish');
-        event.target.classList.remove('available');
-        event.target.classList.add('finish');
+        if (!finishElement) {
+            console.log(2);
+            finish = getLocation(currLocation);
+            finishElement = targeted;
+            targeted.classList.add("finish");
+            return;
+        }
+
+        if (!isClickedHerPushed) {
+            console.log(1);
+            finishElement.classList.remove("finish")
+            finish = getLocation(currLocation);
+            finishElement = targeted;
+            targeted.classList.add("finish");
+            return;
+        }
+              
+    } else {
+        alert("pleas click on available box")
     }
-    
-    
-    console.log('start ', start);
-    console.log('finish ', finish);
+
 
 
 }

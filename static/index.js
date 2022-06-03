@@ -1,8 +1,10 @@
 const table = document.querySelector('#grid-container');
 const car = document.querySelector('#car');
-const rotations ={
+const generateButton = document.querySelector(".generate");
+const SolveButton = document.querySelector(".solve");
+const rotations = {
     top: 'rotate(90deg)',
-    bottom:'rotate(-90deg)',
+    bottom: 'rotate(-90deg)',
     left: 'rotate(180deg)',
     right: 'rotate(0deg)'
 }
@@ -30,25 +32,47 @@ const game = [
     [2, 0, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2],
     [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]];
 
+const dontHaveSolution = () => {
+    start = 0;
+    finish = 0;
+    startElement.classList.remove("start");
+    finishElement.classList.remove("finish");
+    startElement = null;
+    finishElement = null;
+    isClickedHerPushed = false;
+    car.classList.add('hidden');
+    alert("can't find solution because the way is blocked")
+}
+const haveSolution = (solution) => {
+    generateButton.classList.add("stopWork");
+    SolveButton.classList.add("stopWork");
+    printPath(solution);
+}
+
 // const tempGame = game;
 const solve = () => {
-    isClickedHerPushed = true;
-    try {
-        const xhttp = new XMLHttpRequest();
-        xhttp.onload = function () {
-            const z = this.responseText;
-            console.log(z)
-            // console.log(JSON.parse(z));
-            solution = JSON.parse(z);
-            sol = solution;
-            printPath(solution);
-        }
-        xhttp.open("POST", "/solve");
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send(`game=${JSON.stringify(game)}&&start=${JSON.stringify(start)}&&goal=${JSON.stringify(finish)}`);
-    } catch (error) {
-        console.log(error.message())
+    if (start != 0 && finish != 0) {
+        isClickedHerPushed = true;
+        try {
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function () {
+                const solutionArray = this.responseText;
+                solution = JSON.parse(solutionArray);
+                if (solution.length === 0) {
+                    dontHaveSolution();
+                    return;
+                }
+                haveSolution(solution);
+            }
+            xhttp.open("POST", "/solve");
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(`game=${JSON.stringify(game)}&&start=${JSON.stringify(start)}&&goal=${JSON.stringify(finish)}`);
+        } catch (error) {
+            console.log(error.message())
 
+        }
+    } else {
+        alert("please choose a start node and finish node");
     }
 
 }
@@ -59,17 +83,15 @@ const printPath = async solution => {
     console.log(solution);
     car.classList.remove('hidden');
     for (index in solution) {
-        const xPos = parseInt(car.style.left.replace('px',''));
-        const yPos = parseInt(car.style.top.replace('px',''));
+        const xPos = parseInt(car.style.left.replace('px', ''));
+        const yPos = parseInt(car.style.top.replace('px', ''));
         console.log(xPos, yPos);
-        // console.log(index);
-
         const yIndex = solution[index][0] * 32;
         const xIndex = solution[index][1] * 32;
-        console.log(xIndex,yIndex);
-        const diffY = -(yPos - yIndex)/32;
-        const diffX = -(xPos - xIndex)/32;
-        switch (diffY){
+        console.log(xIndex, yIndex);
+        const diffY = -(yPos - yIndex) / 32;
+        const diffX = -(xPos - xIndex) / 32;
+        switch (diffY) {
             case -1:
                 car.style.transform = rotations.bottom;
                 break;
@@ -79,7 +101,7 @@ const printPath = async solution => {
             default:
                 break;
         }
-        switch (diffX){
+        switch (diffX) {
             case -1:
                 car.style.transform = rotations.left;
                 break;
@@ -92,24 +114,26 @@ const printPath = async solution => {
         car.style.left = xIndex + 'px';
         car.style.top = yIndex + 'px';
 
-        // console.log(xIndex, yIndex);
         await timer(500);
     }
-    // console.log(start);
-    // console.log(finish);
     start = finish;
-    // console.log(start);
     startElement.classList.remove("start");
     finishElement.classList.remove("finish");
-    startElement=finishElement
+    startElement = finishElement
     startElement.classList.add("start");
-    isClickedHerPushed=false;
-    finish=0;
-    finishElement=null;
+    isClickedHerPushed = false;
+    finish = 0;
+    finishElement = null;
+
+    generateButton.classList.remove("stopWork");
+    SolveButton.classList.remove("stopWork");
+
 }
 
 const Generate = () => {
     // console.log(tempGame);
+    car.classList.add('hidden');
+
 
     for (let i = 0; i < game.length; i++) {
         for (let j = 1; j < game[i].length - 1; j++) {
@@ -157,7 +181,7 @@ const Selection = (event) => {
     const type = targeted.dataset.type;
     if (type == 0) {
         if (!startElement) {
-            start =getLocation(currLocation);
+            start = getLocation(currLocation);
             startElement = targeted;
             targeted.classList.add("start");
             return;
@@ -179,7 +203,7 @@ const Selection = (event) => {
             targeted.classList.add("finish");
             return;
         }
-              
+
     } else {
         alert("pleas click on available box")
     }

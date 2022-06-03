@@ -1,5 +1,11 @@
 const table = document.querySelector('#grid-container');
 const car = document.querySelector('#car');
+const rotations ={
+    top: 'rotate(90deg)',
+    bottom:'rotate(-90deg)',
+    left: 'rotate(180deg)',
+    right: 'rotate(0deg)'
+}
 var start, finish = 0;
 var startElement, finishElement = null;
 var isClickedHerPushed = false;
@@ -53,21 +59,46 @@ const printPath = async solution => {
     console.log(solution);
     car.classList.remove('hidden');
     for (index in solution) {
-
-        console.log(index);
+        const xPos = parseInt(car.style.left.replace('px',''));
+        const yPos = parseInt(car.style.top.replace('px',''));
+        console.log(xPos, yPos);
+        // console.log(index);
 
         const yIndex = solution[index][0] * 32;
         const xIndex = solution[index][1] * 32;
+        console.log(xIndex,yIndex);
+        const diffY = -(yPos - yIndex)/32;
+        const diffX = -(xPos - xIndex)/32;
+        switch (diffY){
+            case -1:
+                car.style.transform = rotations.bottom;
+                break;
+            case 1:
+                car.style.transform = rotations.top;
+                break;
+            default:
+                break;
+        }
+        switch (diffX){
+            case -1:
+                car.style.transform = rotations.left;
+                break;
+            case 1:
+                car.style.transform = rotations.right;
+                break;
+            default:
+                break;
+        }
         car.style.left = xIndex + 'px';
         car.style.top = yIndex + 'px';
 
-        console.log(xIndex, yIndex);
+        // console.log(xIndex, yIndex);
         await timer(500);
     }
-    console.log(start);
-    console.log(finish);
+    // console.log(start);
+    // console.log(finish);
     start = finish;
-    console.log(start);
+    // console.log(start);
     startElement.classList.remove("start");
     finishElement.classList.remove("finish");
     startElement=finishElement

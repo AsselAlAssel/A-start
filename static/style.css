@@ -49,7 +49,9 @@ button {
 
 .game {
     position: relative;
-    background: #fff;
+    /* background: #fff; */
+    width: fit-content;
+    margin: 0 auto;
 }
 
 .car {
@@ -58,6 +60,9 @@ button {
     height: 32px;
     position: absolute;
     z-index: 9;
+}
+.hidden{
+    display: none;
 }
 
 table {
